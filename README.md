@@ -1,5 +1,6 @@
 # Getting Started with Example Settings
 
+Example settings is just for *"hello world"* demonstration, not the real one.
 
 ## Server (Soviet) Set Up
 
@@ -42,7 +43,7 @@
 Our IoT toy model assumes the following scenario:
 
 1) The server (soviet) is owned by an IoT service company.
-1) The server has a DB that contains the information of all users and devices (fasci).
+1) The server has a DB that contains the information of all users and devices (fascio).
 1) There may be an arbitrary number of users and an arbitrary number of devices.
 1) The IoT service company also produces and sells IoT devices.
 1) Each device (fascio) has a unique device ID.
@@ -61,28 +62,27 @@ Our IoT toy model assumes the following scenario:
 
 ### Server (Soviet)
 
-* Server (soviet) is Node.js(npm).
-* It also has a MySQL DB.
+* Server is written in nodejs.
+* Nginx server receives inbound HTTPS connection, and passes to localhost http connection to nodejs server program by [nginx reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
+* Server rejects all inbound attempts except Nginx HTTPS connection (443) and SSH connection (22) by [iptables](https://linux.die.net/man/8/iptables) firewall.
+* Server requires MySQL DB Server.
 * DB contains user and device information (see soviet/sqlscripts/soviet.sql).
 * The Bcrypt has of the user password is stored in the DB.
 * DB also stores all sensor data.
 * The server updates the DB upon user registration or device production.
 * The server provides information in the DB to the user.
 * The server settings must specify the open server port number, session name and password, DB host, DB username, DB password and DB name.
-* The server must be named soviet.
 
 ### Device (Fascio)
 
-* A device can run on any hardware as long as it has a sensor and an output functionary.
-* A device rejects all inbound attempts at establishing a connection, and upon being turned on will continuously attempt to establish a duplex connection with the server until successful.
-* Once successful connection is established with the server, the device will maintain the same connection/session until the device is turned off.
-* A device can only be turned on and off directly through manual, analogue means. The server cannot turn the device off.
-* Device settings must specify a device ID, device password, and the location(URL) of the server.
-* As long as these conditions are satisfied, a device need not be Node.js as in the example code.
+* A device run on a [raspberry pi](https://www.raspberrypi.org/) device whose GPIO #10 is connected to input sensor and GPIO #11 is connected to output.
+* A device rejects all inbound attempts at establishing a connection by [iptables](https://linux.die.net/man/8/iptables) firewall.
+* A device attempt to establish a HTTPS connection with the server and authenticate to server with in-device authentication information.
+* Device settings (etc/settings.json) have the authentication information: a device ID, device password, and the location(URL) of the server.
 
 ### User
 
-* Accesses the server using a browser.
+* Accesses the server using a browser in HTTPS.
 * A user may request account creation.
 * A user may request sign in.
 * A user may request to register a newly purchased device.
@@ -96,8 +96,6 @@ Our IoT toy model assumes the following scenario:
 1) Install npm, Node.js, MySQL, and nginx.
 1) To desired directory: git clone https://github.com/KUSS-Project-19/soviet.git
 1) Modify ./etc/settings.json to desired specifications
-	*
-1) Modify ./sqlscripts/soviet.sql to desired specifications
 	*
 1) `npm install`
 1) `npm start`
