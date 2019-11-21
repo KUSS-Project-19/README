@@ -111,8 +111,8 @@ Our IoT toy model assumes the following scenario:
 
         index index.html index.html;
 
-        server_name _; // your domain name
-        ssl_certificate /etc/ssl/certs/server.crt;
+        server_name _;                                  # your domain name
+        ssl_certificate /etc/ssl/certs/server.crt;      # your HTTPS certificate
         ssl_certificate_key /etc/ssl/private/server.key;
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers HIGH:!aNULL:!MD5;
@@ -131,7 +131,7 @@ Our IoT toy model assumes the following scenario:
                 proxy_read_timeout 86400;
                 keepalive_timeout 86400;
 
-                proxy_pass http://localhost:8080; // reverse proxy for nodejs program
+                proxy_pass http://localhost:8080;       # reverse proxy for nodejs program
         }
     }
     ```
