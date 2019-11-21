@@ -63,11 +63,11 @@ Our IoT toy model assumes the following scenario:
 ### Server (Soviet)
 
 * Server is written in nodejs.
-* Nginx server receives inbound HTTPS connection, and passes to localhost http connection to nodejs server program by [nginx reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
-* Server rejects all inbound attempts except Nginx HTTPS connection (443) and SSH connection (22) by [iptables](https://linux.die.net/man/8/iptables) firewall.
-* Server requires MySQL DB Server.
+* A Nginx server receives inbound HTTPS connection, and passes to localhost an HTTP connection to the nodejs server program by [nginx reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
+* Server rejects all inbound attempts except Nginx HTTPS connection (443) and SSH connection (22) by an [iptables](https://linux.die.net/man/8/iptables) firewall.
+* Server requires a MySQL DB Server.
 * DB contains user and device information (see soviet/sqlscripts/soviet.sql).
-* The Bcrypt has of the user password is stored in the DB.
+* The Bcrypt hash of the user password is stored in the DB.
 * DB also stores all sensor data.
 * The server updates the DB upon user registration or device production.
 * The server provides information in the DB to the user.
@@ -75,10 +75,10 @@ Our IoT toy model assumes the following scenario:
 
 ### Device (Fascio)
 
-* A device run on a [raspberry pi](https://www.raspberrypi.org/) device whose GPIO #10 is connected to input sensor and GPIO #11 is connected to output.
-* A device rejects all inbound attempts at establishing a connection by [iptables](https://linux.die.net/man/8/iptables) firewall.
-* A device attempt to establish a HTTPS connection with the server and authenticate to server with in-device authentication information.
-* Device settings (etc/settings.json) have the authentication information: a device ID, device password, and the location(URL) of the server.
+* A device runs on a [raspberry pi](https://www.raspberrypi.org/) device whose GPIO #10 is connected to input sensor and GPIO #11 is connected to output.
+* A device rejects all inbound attempts at establishing a connection by an [iptables](https://linux.die.net/man/8/iptables) firewall.
+* A device attempts to establish a HTTPS connection with the server and authenticates itself to the server with in-device authentication information.
+* Device settings (etc/settings.json) contains the authentication information: a unique device ID, device password, and the location(URL) of the server.
 
 ### User
 
@@ -96,8 +96,19 @@ Our IoT toy model assumes the following scenario:
 1) Install npm, Node.js, MySQL, and nginx.
 1) To desired directory: git clone https://github.com/KUSS-Project-19/soviet.git
 1) Modify ./etc/settings.json to desired specifications
-	*
+	* "frontweb" : "port" is the port the server uses to handle incoming connection requests.
+    * "frontweb" : "proxy" is ...
+    * "frontweb" : "prefix" is ...
+    * "frontweb" : "session" : "name" is the name(id) of the server.
+	* "frontweb" : "session" : "secret" is the secret key of the server-user session.
+	* "db" : "host" is the MySQL DB host location.
+	* "db" : "user" is the MySQL DB username.
+	* "db" : "password" is the MySQL DB user password.
+	* "db" : "database" is the name of the MySQL DB used by the server for the Toy Model.
+1) Register initial devices and default users to the server DB directly (see soviet/sqlscripts/soviet.sql).
 1) `npm install`
 1) `npm start`
 
 ## Fascio Set Up
+
+1) 
